@@ -1,19 +1,37 @@
-# Frontend Deployment Guide
+# Frontend Deployment Guide (Vercel + Netlify)
 
-## Vercel Deployment
+The frontend is a Vite + React app inside `frontend/`.
 
-### Prerequisites
-1. Create a Vercel account at [vercel.com](https://vercel.com)
-2. Install Vercel CLI: `npm i -g vercel`
-3. Push your code to GitHub
+Important: the frontend must know the backend URL via environment variables.
 
-### Steps
+## Required environment variables
 
-1. **Build Configuration**
-```json
-// In your frontend package.json, ensure you have:
-{
-  "scripts": {
-    "build": "vite build"
-  }
-}
+Set these in your hosting provider:
+
+- `VITE_API_URL` = your backend API base (example: `https://your-backend.onrender.com/api`)
+- `VITE_SOCKET_URL` = your backend origin for Socket.IO (example: `https://your-backend.onrender.com`)
+
+If you don’t use sockets, you can still set `VITE_SOCKET_URL` to the backend origin.
+
+## Deploy on Vercel
+
+1. Import your GitHub repo into Vercel.
+2. Set **Root Directory** to `frontend`.
+3. Build settings:
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Add the env vars above.
+5. Deploy.
+
+## Deploy on Netlify
+
+1. Import your GitHub repo into Netlify.
+2. Build settings:
+   - Base directory: `frontend`
+   - Build command: `npm run build`
+   - Publish directory: `frontend/dist`
+3. Add the env vars above.
+4. Deploy.
+
+Notes:
+- A SPA redirect is already included via `frontend/netlify.toml`.

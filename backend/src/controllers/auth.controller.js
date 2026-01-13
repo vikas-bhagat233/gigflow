@@ -13,7 +13,13 @@ export const login = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "Invalid credentials" });
 
   const token = generateToken(user._id);
-  res.cookie("token", token, { httpOnly: true });
+  const isProd = process.env.NODE_ENV === "production";
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
   res.json({ message: "Login successful" });
 });
 
@@ -23,6 +29,10 @@ export const me = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  res.clearCookie("token");
+  const isProd = process.env.NODE_ENV === "production";
+  res.clearCookie("token", {
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd
+  });
   res.json({ message: "Logged out" });
 });

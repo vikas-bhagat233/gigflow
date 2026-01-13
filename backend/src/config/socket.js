@@ -3,9 +3,14 @@ import { Server } from "socket.io";
 let io;
 
 export const initSocket = async (server) => {
+  const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
   io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL,
+      origin: allowedOrigins.length ? allowedOrigins : true,
       credentials: true
     }
   });
